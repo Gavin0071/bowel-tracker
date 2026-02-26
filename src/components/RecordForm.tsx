@@ -29,12 +29,14 @@ function Stepper({
   min = 0,
   max = 999,
   label,
+  step = 1,
 }: {
   value: number;
   onChange: (v: number) => void;
   min?: number;
   max?: number;
   label: string;
+  step?: number;
 }) {
   return (
     <View style={sf.stepperRow}>
@@ -42,14 +44,14 @@ function Stepper({
       <View style={sf.stepperControls}>
         <TouchableOpacity
           style={sf.stepBtn}
-          onPress={() => onChange(Math.max(min, value - 1))}
+          onPress={() => onChange(Math.max(min, value - step))}
         >
           <Text style={sf.stepBtnText}>−</Text>
         </TouchableOpacity>
         <Text style={sf.stepValue}>{value}</Text>
         <TouchableOpacity
           style={sf.stepBtn}
-          onPress={() => onChange(Math.min(max, value + 1))}
+          onPress={() => onChange(Math.min(max, value + step))}
         >
           <Text style={sf.stepBtnText}>+</Text>
         </TouchableOpacity>
@@ -71,7 +73,7 @@ export default function RecordForm({ initialValues, onSave, title }: Props) {
   const [minute, setMinute] = useState(
     initialValues?.time
       ? parseInt(initialValues.time.split(':')[1])
-      : Math.floor(now.getMinutes() / 5) * 5
+      : now.getMinutes()
   );
   const [bristol, setBristol] = useState<number | undefined>(
     initialValues?.bristol
@@ -149,9 +151,10 @@ export default function RecordForm({ initialValues, onSave, title }: Props) {
           <Stepper
             label="分"
             value={minute}
-            onChange={(v) => setMinute(Math.round(v / 5) * 5)}
+            onChange={setMinute}
             min={0}
             max={55}
+            step={1}
           />
         </View>
       </View>
